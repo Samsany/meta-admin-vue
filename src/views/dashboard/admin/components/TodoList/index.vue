@@ -2,11 +2,11 @@
   <section class="todoapp">
     <!-- header -->
     <header class="header">
-      <input class="new-todo" autocomplete="off" placeholder="Todo List" @keyup.enter="addTodo">
+      <input class="new-todo" autocomplete="off" placeholder="Todo List" @keyup.enter="addTodo" />
     </header>
     <!-- main section -->
     <section v-show="todos.length" class="main">
-      <input id="toggle-all" :checked="allChecked" class="toggle-all" type="checkbox" @change="toggleAll({ done: !allChecked })">
+      <input id="toggle-all" :checked="allChecked" class="toggle-all" type="checkbox" @change="toggleAll({ done: !allChecked })" />
       <label for="toggle-all" />
       <ul class="todo-list">
         <todo
@@ -59,7 +59,7 @@ const defalutList = [
 export default {
   components: { Todo },
   filters: {
-    pluralize: (n, w) => n === 1 ? w : w + 's',
+    pluralize: (n, w) => (n === 1 ? w : w + 's'),
     capitalize: s => s.charAt(0).toUpperCase() + s.slice(1)
   },
   data() {
@@ -123,5 +123,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import './index.scss';
+@import './index.scss';
 </style>

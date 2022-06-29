@@ -1,5 +1,5 @@
 <template>
-  <el-card style="margin-bottom:20px;">
+  <el-card style="margin-bottom: 20px">
     <div slot="header" class="clearfix">
       <span>About me</span>
     </div>
@@ -21,9 +21,7 @@
       <div class="user-education user-bio-section">
         <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
         <div class="user-bio-section-body">
-          <div class="text-muted">
-            JS in Computer Science from the University of Technology
-          </div>
+          <div class="text-muted">JS in Computer Science from the University of Technology</div>
         </div>
       </div>
 
