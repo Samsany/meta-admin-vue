@@ -5,16 +5,17 @@ import Cookies from 'js-cookie'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
-import './styles/element-variables.scss'
+import '@/assets/styles/element-variables.scss'
 
-import '@/styles/index.scss' // global css
+import '@/assets/styles/index.scss' // global css
+import '@/assets/styles/common.scss' // common css
 
 import App from './App'
 import store from './store'
 import router from './router'
 
 import i18n from './lang' // internationalization
-import './icons' // icon
+import '@/assets/icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 

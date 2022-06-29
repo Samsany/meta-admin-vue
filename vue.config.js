@@ -61,26 +61,26 @@ module.exports = {
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload
-    // config.plugin('preload').tap(() => [
-    //   {
-    //     rel: 'preload',
-    //     // to ignore runtime.js
-    //     // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
-    //     fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
-    //     include: 'initial'
-    //   }
-    // ])
+    config.plugin('preload').tap(() => [
+      {
+        rel: 'preload',
+        // to ignore runtime.js
+        // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
+        fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
+        include: 'initial'
+      }
+    ])
 
     config.plugins.delete('preload') // TODO: need test
     // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('prefetch')
 
     // set svg-sprite-loader
-    config.module.rule('svg').exclude.add(resolve('src/icons')).end()
+    config.module.rule('svg').exclude.add(resolve('src/assets/icons')).end()
     config.module
       .rule('icons')
       .test(/\.svg$/)
-      .include.add(resolve('src/icons'))
+      .include.add(resolve('src/assets/icons'))
       .end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
@@ -124,11 +124,7 @@ module.exports = {
         }
       })
       // https:// webpack.js.org/configuration/optimization/#optimizationruntimechunk
-      config.optimization.runtimeChunk('single'),
-      {
-        from: path.resolve(__dirname, './public/robots.txt'), // 防爬虫文件
-        to: './' // 到根目录下
-      }
+      config.optimization.runtimeChunk('single')
     })
   }
 }
