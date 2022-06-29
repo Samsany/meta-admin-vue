@@ -1,18 +1,22 @@
 import request from '@/utils/request'
+import { Base64 } from 'js-base64'
+import { CLIENT_NAME, CLIENT_SECRET } from '@/utils/global'
 
 export function login(data) {
   return request({
-    url: '/vue-element-admin/user/login',
+    url: '/meta-uaa/oauth/token',
     method: 'post',
+    headers: {
+      Authorization: 'Basic ' + Base64.encode(`${CLIENT_NAME}:${CLIENT_SECRET}`)
+    },
     data
   })
 }
 
-export function getInfo(token) {
+export function getInfo() {
   return request({
-    url: '/vue-element-admin/user/info',
-    method: 'get',
-    params: { token }
+    url: '/meta-uaa/auth/user/info',
+    method: 'get'
   })
 }
 
