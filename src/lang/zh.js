@@ -1,6 +1,17 @@
 export default {
   route: {
     dashboard: '首页',
+    systemManagement: '系统管理',
+    userManagement: '用户管理',
+    role: '角色管理',
+    menuManagement: '菜单管理',
+    dictManagement: '字典管理',
+    department: '部门管理',
+    post: '岗位管理',
+    dictData: '字典数据',
+    monitor: '系统监控',
+    systemTools: '系统工具',
+    generatorCode: '代码生成',
     documentation: '文档',
     guide: '引导页',
     permission: '权限测试页',

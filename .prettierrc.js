@@ -1,4 +1,3 @@
-
 module.exports = {
   // 最大长度80个字符
   printWidth: 140,
@@ -7,7 +6,7 @@ module.exports = {
   // 单引号
   singleQuote: true,
   // JSX双引号
-  jsxSingleQuote: false,
+  jsxSingleQuote: true,
   // 尽可能使用尾随逗号（包括函数参数）
   trailingComma: 'none',
   // 在对象文字中打印括号之间的空格。

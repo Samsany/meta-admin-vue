@@ -1,36 +1,8 @@
 import { constantRoutes } from '@/router'
-import { dynamicRoutes } from '@/api/menu'
+import { dynamicRoutes } from '@/api/system/menu'
 import Layout from '@/layout'
-
-/**
- * Filter asynchronous routing tables by recursion
- * @param routes asyncRoutes
- * @param roles
- */
-export function filterAsyncRoutes(routes, roles) {
-  const res = []
-
-  routes.forEach(route => {
-    const tmp = { ...route }
-    const component = tmp.component
-
-    if (component) {
-      if (component === 'Layout') {
-        tmp.component = Layout
-      } else {
-        tmp.component = loadView(component)
-      }
-    }
-
-    if (tmp.children) {
-      tmp.children = filterAsyncRoutes(tmp.children, roles)
-    }
-
-    res.push(tmp)
-  })
-
-  return res
-}
+import InnerLink from '@/layout/components/InnerLink'
+import ParentView from '@/layout/components/ParentView'
 
 const permission = {
   namespaced: true,
@@ -57,6 +29,35 @@ const permission = {
       })
     }
   }
+}
+
+/**
+ * Filter asynchronous routing tables by recursion
+ * @param routes asyncRoutes
+ * @param roles
+ */
+export function filterAsyncRoutes(routes, roles) {
+  return routes.map(route => {
+    if (route.component) {
+      // Layout ParentView 组件特殊处理
+      if (route.component === 'Layout') {
+        route.component = Layout
+        if (!route.path.startsWith('/')) {
+          route.path = '/' + route.path
+        }
+      } else if (route.component === 'ParentView') {
+        route.component = ParentView
+      } else if (route.component === 'InnerLink') {
+        route.component = InnerLink
+      } else {
+        route.component = loadView(route.component)
+      }
+    }
+    if (route.children) {
+      route.children = filterAsyncRoutes(route.children)
+    }
+    return route
+  })
 }
 
 export const loadView = view => {
