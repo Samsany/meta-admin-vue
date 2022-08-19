@@ -9,7 +9,7 @@ export function listType(params) {
   })
 }
 
-// 查询字典类型详细
+// 查询字典类型详情
 export function getType(dictId) {
   return request({
     url: `/meta-admin/dict/type/${dictId}`,

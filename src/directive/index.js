@@ -1,5 +1,5 @@
 import Clipboard from './clipboard'
-import Drag from './el-drag-dialog'
+import Drag from './el-drag-dialog/drag'
 import dialogDragWidth from './el-drag-dialog/dragWidth'
 import dialogDragHeight from './el-drag-dialog/dragHeight'
 import Adaptive from './el-table/adaptive'

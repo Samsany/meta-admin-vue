@@ -345,6 +345,7 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
 // 表单重置
 export function resetForm(refName) {
   if (this.$refs[refName]) {
@@ -355,14 +356,14 @@ export function resetForm(refName) {
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
   const search = params
-  search.params = typeof search.params === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {}
+  // search.params = typeof search.params === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {}
   dateRange = Array.isArray(dateRange) ? dateRange : []
   if (typeof propName === 'undefined') {
-    search.params['beginTime'] = dateRange[0]
-    search.params['endTime'] = dateRange[1]
+    search['beginDate'] = dateRange[0]
+    search['endDate'] = dateRange[1]
   } else {
-    search.params['begin' + propName] = dateRange[0]
-    search.params['end' + propName] = dateRange[1]
+    search['begin' + propName] = dateRange[0]
+    search['end' + propName] = dateRange[1]
   }
   return search
 }
@@ -496,6 +497,7 @@ export function handleTree(data, id, parentId, children) {
       }
     }
   }
+
   return tree
 }
 

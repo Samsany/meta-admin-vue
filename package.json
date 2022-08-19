@@ -67,7 +67,7 @@
     "eslint-plugin-prettier": "4.1.0",
     "eslint-plugin-vue": "7.2.0",
     "html-webpack-plugin": "4.5.2",
-    "husky": "8.0.1",
+    "husky": "^8.0.1",
     "lint-staged": "13.0.3",
     "mockjs": "1.0.1-beta3",
     "plop": "2.3.0",

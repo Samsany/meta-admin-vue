@@ -1,3 +1,6 @@
+<h1 align='center'>
+META-ADMIN-VUE
+</h1>
 <p align="center">
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.6.10-brightgreen.svg" alt="vue">
@@ -28,9 +31,9 @@
 和 [element-ui](https://github.com/ElemeFE/element)实现。它使用了最新的前端技术栈，内置了 i18n
 国际化解决方案，动态路由，权限验证，提炼了典型的业务模型，提供了丰富的功能组件，它可以帮助你快速搭建企业级中后台产品原型。相信不管你的需求是什么，本项目都能帮助到你。
 
-- [在线预览](https://github.com/Samsany/meta-admin-vue)
+- [在线预览](https://github.com/Samsany/meta-admin-vue.git)
 
-- [使用文档](https://github.com/Samsany/meta-admin-vue/zh/)
+- [使用文档](https://github.com/Samsany/meta-admin-docs)
 
 - [Gitter 讨论组](https://gitter.im/vue-element-admin/discuss)
 
@@ -50,7 +53,6 @@
 、[vue](https://cn.vuejs.org/index.html)、[vuex](https://vuex.vuejs.org/zh-cn/)
 、[vue-router](https://router.vuejs.org/zh-cn/) 、[vue-cli](https://github.com/vuejs/vue-cli)
 、[axios](https://github.com/axios/axios) 和 [element-ui](https://github.com/ElemeFE/element)
-，所有的请求数据都使用[Mock.js](https://github.com/nuysoft/Mock)进行模拟，提前了解和学习这些知识会对使用本项目有很大的帮助。
 
 **如有问题请先看上述使用文档和文章，若不能满足，欢迎 issue 和 pr**
 
@@ -119,7 +121,7 @@ npm run lint
 npm run lint -- --fix
 ```
 
-更多信息请参考 [使用文档](https://github.com/Samsany/meta-admin-vue.git/zh/)
+更多信息请参考 [使用文档](https://samsany.github.io/auiu-meta-docs/)
 
 ## Browsers support
 

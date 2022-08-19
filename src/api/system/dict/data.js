@@ -9,7 +9,7 @@ export function listData(query) {
   })
 }
 
-// 查询字典数据详细
+// 查询字典数据详情
 export function getData(dictDataId) {
   return request({
     url: `/meta-admin/dict/data/${dictDataId}`,
