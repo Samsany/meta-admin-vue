@@ -68,6 +68,15 @@
       <el-table-column label="操作" align="center" fixed="right" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.status"
+            v-permission="['tools:datasource:import']"
+            type="text"
+            size="small"
+            icon="el-icon-upload"
+            @click="openImportTable(scope.row)"
+            >导入
+          </el-button>
+          <el-button
             v-permission="['tools:datasource:edit']"
             type="text"
             size="small"
@@ -176,14 +185,17 @@
         </div>
       </div>
     </el-dialog>
+
+    <import-table ref="import" :ds-name="dsName" @ok="handleQuery" />
   </div>
 </template>
 
 <script>
+import ImportTable from './importTable'
 import { addDataSource, connectDataSource, delDataSource, getDataSource, listDataSource, updateDataSource } from '@/api/tools/datasource'
 
 export default {
-  components: {},
+  components: { ImportTable },
   dicts: ['sys_normal_disable', 'db_type'],
   // 定义属性
   data() {
@@ -224,6 +236,8 @@ export default {
       form: {},
       passwordType: 'password',
       capsTooltip: false,
+      // 数据源名称
+      dsName: '',
       // 表单校验
       rules: {
         name: [{ required: true, message: '数据源名称不能为空', trigger: 'blur' }],
@@ -278,6 +292,11 @@ export default {
         this.total = totalCount
         this.loading = false
       })
+    },
+    /** 打开导入表弹窗 */
+    openImportTable(row) {
+      this.dsName = row.dsName
+      this.$refs.import.show()
     },
     /** 搜索按钮操作 */
     handleQuery() {
