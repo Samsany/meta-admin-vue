@@ -3,7 +3,7 @@ import request from '@/utils/request'
 
 export function listDbTable(params) {
   return request({
-    url: '/meta-gen/tools/gen/db/list',
+    url: `/meta-gen/tools/gen/db/list`,
     method: 'get',
     params
   })
@@ -12,7 +12,7 @@ export function listDbTable(params) {
 // 导入表
 export function importTable(data) {
   return request({
-    url: '/meta-gen/tools/gen/importTable',
+    url: `/meta-gen/tools/gen/importTable/${data.dsName}`,
     method: 'post',
     data
   })

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import { getRefreshToken, getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -30,6 +30,9 @@ service.interceptors.request.use(
   }
 )
 
+let refreshing = false // 正在刷新标识，避免重复刷新
+let waitQueue = [] // 请求等待队列
+
 // response interceptor
 service.interceptors.response.use(
   /**
@@ -41,32 +44,59 @@ service.interceptors.response.use(
    * Determine the request status by custom code
    * Here is just an example
    * You can also judge the status by HTTP Status Code
-   */
-  response => {
-    const res = response.data
-    console.log('请求数据：', res)
+   */ response => {
+    const { config, data: res } = response
+    // console.log('请求数据：', res)
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
-      Message({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // to re-login
-        MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
+      if (res.code === 10230) {
+        if (refreshing === false) {
+          refreshing = true // 切换正在刷新标识，其他请求先进请求等待队列中
+          const refreshToken = getRefreshToken()
+          return store
+            .dispatch('user/refreshToken', refreshToken)
+            .then(token => {
+              // debugger
+              // config.headers['Authorization'] = token
+              // config.baseURL = '' // 请求重试时，url已包含baseURL
+              waitQueue.forEach(callback => callback()) // 已成功刷新token，队列中的所有请求重试
+              waitQueue = []
+              return service(config)
+            })
+            .catch(() => {
+              // token续期失败
+              // to re-login
+              MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', {
+                confirmButtonText: '重新登录',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                store.dispatch('user/resetToken').then(() => {
+                  location.reload()
+                })
+              })
+            })
+            .finally(() => {
+              refreshing = false
+            })
+        } else {
+          return new Promise(resolve => {
+            waitQueue.push(token => {
+              config.headers.Authorization = token
+              config.baseURL = ''
+              resolve(service(config))
+            })
           })
+        }
+      } else {
+        Message({
+          message: res.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000
         })
+        return Promise.reject(new Error(res.message || 'Error'))
       }
-      return Promise.reject(new Error(res.message || 'Error'))
     } else {
       return res
     }
@@ -75,7 +105,7 @@ service.interceptors.response.use(
     console.log('err' + error) // for debug
     const { message } = error.response.data
     Message({
-      message: message || error.message,
+      message: message || error.message || error,
       type: 'error',
       duration: 5 * 1000
     })

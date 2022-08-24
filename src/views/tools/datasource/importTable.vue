@@ -14,12 +14,10 @@
       </el-form-item>
     </el-form>
     <el-row>
-      <el-table ref="table" height="260px" :data="dbTableList" @row-click="clickRow" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="tableName" label="表名称" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="tableComment" label="表描述" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="createTime" label="创建时间"></el-table-column>
-        <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+      <el-table ref="table" height="260px" border :data="dbTableList" @row-click="clickRow" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="name" label="表名称" width="200" :show-overflow-tooltip="true" />
+        <el-table-column prop="comment" label="表描述" min-width="200" :show-overflow-tooltip="true" />
       </el-table>
       <pagination
         v-show="total > 0"
@@ -40,9 +38,6 @@
 import { importTable, listDbTable } from '@/api/tools/gen'
 
 export default {
-  props: {
-    dsName: String
-  },
   data() {
     return {
       // 遮罩层
@@ -51,12 +46,14 @@ export default {
       tables: [],
       // 总条数
       total: 0,
+      dsName: undefined,
       // 表数据
       dbTableList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 100,
+        pageSize: 10,
+        keyword: undefined,
         tableName: undefined,
         tableComment: undefined
       }
@@ -64,7 +61,8 @@ export default {
   },
   methods: {
     // 显示弹框
-    show() {
+    show(dsName) {
+      this.dsName = dsName
       this.getList()
       this.visible = true
     },
@@ -73,13 +71,15 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.tables = selection.map(item => item.tableName)
+      this.tables = selection.map(item => item.name)
     },
     // 查询表数据
     getList() {
+      this.queryParams.keyword = this.dsName
       listDbTable(this.queryParams).then(res => {
-        this.dbTableList = res.rows
-        this.total = res.total
+        const { list, totalCount } = res.data
+        this.dbTableList = list
+        this.total = totalCount
       })
     },
     /** 搜索按钮操作 */
@@ -94,13 +94,14 @@ export default {
     },
     /** 导入按钮操作 */
     handleImportTable() {
-      const tableNames = this.tables.join(',')
-      if (tableNames === '') {
+      // const tableNames = this.tables.join(',')
+      const tables = this.tables
+      if (tables.length === 0) {
         this.$modal.msgError('请选择要导入的表')
         return
       }
-      importTable({ tables: tableNames }).then(res => {
-        this.$modal.msgSuccess(res.msg)
+      importTable({ tables, dsName: this.dsName }).then(res => {
+        this.$modal.msgSuccess(res.message)
         this.visible = false
         this.$emit('ok')
       })

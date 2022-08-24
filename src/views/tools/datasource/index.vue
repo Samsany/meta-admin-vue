@@ -114,7 +114,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入数据源名称" :disabled="editFlag" />
+          <el-input v-model.trim="form.name" placeholder="请输入数据源名称" :disabled="editFlag" />
         </el-form-item>
         <!--        <el-form-item label="驱动类型" prop="driverClass">-->
         <!--          <el-input v-model="form.driverClass" placeholder="请输入驱动类型" />-->
@@ -123,10 +123,10 @@
           <el-input v-model.trim="form.url" placeholder="请输入连接地址" />
         </el-form-item>
         <el-form-item label="端口号" prop="port">
-          <el-input v-model.number="form.port" placeholder="请输入端口号" />
+          <el-input v-model.number.trim="form.port" placeholder="请输入端口号" />
         </el-form-item>
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username" placeholder="请输入用户名" />
+          <el-input v-model.trim="form.username" placeholder="请输入用户名" />
         </el-form-item>
         <el-tooltip v-model="capsTooltip" content="大写锁定" placement="right" manual>
           <el-form-item label="密码" prop="password">
@@ -146,11 +146,11 @@
           </el-form-item>
         </el-tooltip>
         <el-form-item label="数据库名称" prop="databaseName">
-          <el-input v-model="form.databaseName" placeholder="请输入数据库名称" />
+          <el-input v-model.trim="form.databaseName" placeholder="请输入数据库名称" />
         </el-form-item>
         <el-form-item label="Jdbc连接参数" prop="jdbcParams">
           <el-input
-            v-model="form.jdbcParams"
+            v-model.trim="form.jdbcParams"
             type="textarea"
             placeholder="请输入Jdbc连接参数,例： {'key1': 'value1', 'key2': 'value2'}"
             :autosize="{ minRows: 3 }"
@@ -186,7 +186,7 @@
       </div>
     </el-dialog>
 
-    <import-table ref="import" :ds-name="dsName" @ok="handleQuery" />
+    <import-table ref="import" @ok="handleQuery" />
   </div>
 </template>
 
@@ -229,7 +229,7 @@ export default {
       // 查询参数
       queryParams: {
         pageNum: 1,
-        pageSize: 100,
+        pageSize: 10,
         keyword: undefined
       },
       // 表单参数
@@ -295,8 +295,8 @@ export default {
     },
     /** 打开导入表弹窗 */
     openImportTable(row) {
-      this.dsName = row.dsName
-      this.$refs.import.show()
+      // this.dsName = row.name
+      this.$refs.import.show(row.name)
     },
     /** 搜索按钮操作 */
     handleQuery() {
