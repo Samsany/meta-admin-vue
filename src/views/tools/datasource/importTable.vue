@@ -100,7 +100,7 @@ export default {
         this.$modal.msgError('请选择要导入的表')
         return
       }
-      importTable({ tables, dsName: this.dsName }).then(res => {
+      importTable(this.dsName, tables).then(res => {
         this.$modal.msgSuccess(res.message)
         this.visible = false
         this.$emit('ok')

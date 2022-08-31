@@ -46,7 +46,7 @@
     <!--数据表格-->
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" align="center" width="55"></el-table-column>
-      <el-table-column label="编号" type="index" width="50" align="center" prop="id" />
+      <el-table-column label="序号" width="50" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true" width="120" />
       <el-table-column label="数据库类型" align="center" prop="dbType" :show-overflow-tooltip="true" width="120">
         <template slot-scope="scope">
@@ -63,8 +63,8 @@
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" min-width="200" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="updateTime" min-width="200" />
+      <el-table-column label="备注" align="center" prop="remark" width="200" :show-overflow-tooltip="true" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="200" />
       <el-table-column label="操作" align="center" fixed="right" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

@@ -13,6 +13,17 @@ export function login(data) {
   })
 }
 
+export function refreshLogin(data) {
+  return request({
+    url: '/meta-uaa/oauth/token',
+    method: 'post',
+    headers: {
+      Authorization: 'Basic ' + Base64.encode(`${CLIENT_NAME}:${CLIENT_SECRET}`)
+    },
+    data
+  })
+}
+
 export function getInfo() {
   return request({
     url: '/meta-uaa/auth/user/info',

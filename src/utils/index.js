@@ -359,10 +359,10 @@ export function addDateRange(params, dateRange, propName) {
   // search.params = typeof search.params === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {}
   dateRange = Array.isArray(dateRange) ? dateRange : []
   if (typeof propName === 'undefined') {
-    search['beginDate'] = dateRange[0]
+    search['startDate'] = dateRange[0]
     search['endDate'] = dateRange[1]
   } else {
-    search['begin' + propName] = dateRange[0]
+    search['start' + propName] = dateRange[0]
     search['end' + propName] = dateRange[1]
   }
   return search

@@ -1,9 +1,18 @@
 export default {
   bind(el, binding, vnode) {
+    // 初始非全屏
+    let isFullScreen = false
+
+    // 当前顶部高度
+    let nowMarginTop = 0
+
     const dialogHeaderEl = el.querySelector('.el-dialog__header')
     const dragDom = el.querySelector('.el-dialog')
     dialogHeaderEl.style.cssText += ';cursor:move;'
     dragDom.style.cssText += ';top:0px;'
+
+    // 清除选择头部文字效果
+    dialogHeaderEl.onselectstart = new Function('return false')
 
     // 获取原有属性 ie dom元素.currentStyle 火狐谷歌 window.getComputedStyle(dom元素, null);
     const getStyle = (function () {
@@ -14,7 +23,7 @@ export default {
       }
     })()
 
-    dialogHeaderEl.onmousedown = e => {
+    const moveDown = e => {
       // 鼠标按下，计算当前元素距离可视区的距离
       const disX = e.clientX - dialogHeaderEl.offsetLeft
       const disY = e.clientY - dialogHeaderEl.offsetTop
@@ -71,6 +80,39 @@ export default {
       document.onmouseup = function (e) {
         document.onmousemove = null
         document.onmouseup = null
+      }
+    }
+
+    dialogHeaderEl.onmousedown = moveDown
+    // 当前宽高
+    let nowWidth = 0
+    // let nowHight = 0
+    // 双击头部全屏效果
+    dialogHeaderEl.ondblclick = e => {
+      if (isFullScreen === false) {
+        // nowHight = dragDom.clientHeight
+        nowWidth = dragDom.clientWidth
+        nowMarginTop = dragDom.style.marginTop
+
+        dragDom.style.left = 0
+        dragDom.style.top = 0
+        dragDom.style.height = '100VH'
+        dragDom.style.width = '100VW'
+        dragDom.style.marginTop = 0
+
+        isFullScreen = true
+
+        dialogHeaderEl.style.cursor = 'initial'
+        dialogHeaderEl.onmousedown = null
+      } else {
+        dragDom.style.height = 'auto'
+        dragDom.style.width = nowWidth + 'px'
+        dragDom.style.marginTop = nowMarginTop
+
+        isFullScreen = false
+
+        dialogHeaderEl.style.cursor = 'move'
+        dialogHeaderEl.onmousedown = moveDown
       }
     }
   }

@@ -1,6 +1,7 @@
-import { getInfo, login, logout } from '@/api/user'
+import { getInfo, login, logout, refreshLogin } from '@/api/user'
 import { getToken, removeToken, setRefreshToken, setToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { REFRESH_TOKEN_GRANT_TYPE } from '@/utils/global'
 
 const state = {
   token: getToken(),
@@ -46,17 +47,35 @@ const actions = {
       })
         .then(response => {
           const { data } = response
-
           if (!data) {
             reject('Verification failed, please Login again.')
           }
-
           const { bearerType, accessToken, refreshToken } = data
-
           commit('SET_TOKEN', bearerType + accessToken)
           setToken(bearerType + accessToken)
           setRefreshToken(refreshToken)
           resolve(data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  },
+
+  refreshToken({ commit }, refreshToken) {
+    commit('SET_TOKEN', undefined)
+    return new Promise((resolve, reject) => {
+      refreshLogin({ refresh_token: refreshToken, grant_type: REFRESH_TOKEN_GRANT_TYPE })
+        .then(response => {
+          const { data } = response
+          if (!data) {
+            reject('Verification failed, please Login again.')
+          }
+          const { bearerType, accessToken, refreshToken } = data
+          commit('SET_TOKEN', bearerType + accessToken)
+          setToken(bearerType + accessToken)
+          setRefreshToken(refreshToken)
+          resolve(accessToken)
         })
         .catch(error => {
           reject(error)
