@@ -13,6 +13,7 @@ export default {
     systemTools: '系统工具',
     dataSource: '数据源管理',
     codeGenerator: '代码生成',
+    codeEdit: '代码生成编辑',
     documentation: '文档',
     guide: '引导页',
     permission: '权限测试页',

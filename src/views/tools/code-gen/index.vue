@@ -279,7 +279,7 @@ export default {
     handleEditTable(row) {
       const tableId = row.id
       this.$router.push({
-        path: '/tools/gen-edit/index/' + tableId,
+        path: '/tools/code-edit/' + tableId,
         query: { pageNum: this.queryParams.pageNum }
       })
     },
