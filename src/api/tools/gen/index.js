@@ -26,6 +26,15 @@ export function getGenTable(tableId) {
   })
 }
 
+// 更新表生成信息
+export function updateGenTable(data) {
+  return request({
+    url: '/meta-gen/tools/gen',
+    method: 'put',
+    data
+  })
+}
+
 // 导入表
 export function importTable(dsName, data) {
   return request({

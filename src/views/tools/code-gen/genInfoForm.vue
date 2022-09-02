@@ -6,8 +6,8 @@
           <span slot="label">生成模板</span>
           <el-select v-model="info.tplCategory" @change="tplSelectChange">
             <el-option label="单表（增删改查）" value="crud" />
-            <el-option label="树表（增删改查）" value="tree" />
-            <el-option label="主子表（增删改查）" value="sub" />
+            <!--            <el-option label="树表（增删改查）" value="tree" />-->
+            <!--            <el-option label="主子表（增删改查）" value="sub" />-->
           </el-select>
         </el-form-item>
       </el-col>
@@ -15,7 +15,7 @@
         <el-form-item prop="packageName">
           <span slot="label">
             生成包路径
-            <el-tooltip content="生成在哪个java包下，例如 com.ruoyi.system" placement="top">
+            <el-tooltip content="生成在哪个java包下，例如 com.auiucloud.system" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
           </span>
@@ -67,14 +67,46 @@
               <i class="el-icon-question"></i>
             </el-tooltip>
           </span>
-          <treeselect
-            :append-to-body="true"
+          <tree-select
             v-model="info.parentMenuId"
+            :append-to-body="true"
             :options="menus"
             :normalizer="normalizer"
             :show-count="true"
             placeholder="请选择系统菜单"
           />
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item prop="enableSwagger">
+          <span slot="label">
+            继承公共父类
+            <el-tooltip content="domain默认继承BaseEntity" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </span>
+          <el-radio-group v-model="info.superEntityClass">
+            <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="Number(dict.value)">
+              {{ dict.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-col>
+
+      <el-col :span="12">
+        <el-form-item prop="enableSwagger">
+          <span slot="label">
+            启用Swagger
+            <el-tooltip content="启用后domain将自动添加swagger相关注解" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+          </span>
+          <el-radio-group v-model="info.enableSwagger">
+            <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="Number(dict.value)">
+              {{ dict.label }}
+            </el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-col>
 
@@ -91,7 +123,7 @@
         </el-form-item>
       </el-col>
 
-      <el-col :span="24" v-if="info.genType == '1'">
+      <el-col v-if="info.genType === '1'" :span="24">
         <el-form-item prop="genPath">
           <span slot="label">
             自定义路径
@@ -114,7 +146,7 @@
       </el-col>
     </el-row>
 
-    <el-row v-show="info.tplCategory == 'tree'">
+    <el-row v-show="info.tplCategory === 'tree'">
       <h4 class="form-header">其他信息</h4>
       <el-col :span="12">
         <el-form-item>
@@ -171,7 +203,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-    <el-row v-show="info.tplCategory == 'sub'">
+    <el-row v-show="info.tplCategory === 'sub'">
       <h4 class="form-header">关联信息</h4>
       <el-col :span="12">
         <el-form-item>
@@ -214,11 +246,12 @@
 </template>
 
 <script>
-import Treeselect from '@riophae/vue-treeselect'
+import TreeSelect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
-  components: { Treeselect },
+  dicts: ['sys_normal_disable'],
+  components: { TreeSelect },
   props: {
     info: {
       type: Object,
@@ -230,70 +263,60 @@ export default {
     },
     menus: {
       type: Array,
-      default: []
-    },
+      default: () => []
+    }
   },
   data() {
     return {
       subColumns: [],
       rules: {
-        tplCategory: [
-          { required: true, message: "请选择生成模板", trigger: "blur" }
-        ],
-        packageName: [
-          { required: true, message: "请输入生成包路径", trigger: "blur" }
-        ],
-        moduleName: [
-          { required: true, message: "请输入生成模块名", trigger: "blur" }
-        ],
-        businessName: [
-          { required: true, message: "请输入生成业务名", trigger: "blur" }
-        ],
-        functionName: [
-          { required: true, message: "请输入生成功能名", trigger: "blur" }
-        ],
+        tplCategory: [{ required: true, message: '请选择生成模板', trigger: 'blur' }],
+        packageName: [{ required: true, message: '请输入生成包路径', trigger: 'blur' }],
+        moduleName: [{ required: true, message: '请输入生成模块名', trigger: 'blur' }],
+        businessName: [{ required: true, message: '请输入生成业务名', trigger: 'blur' }],
+        functionName: [{ required: true, message: '请输入生成功能名', trigger: 'blur' }]
       }
-    };
-  },
-  created() {},
-  watch: {
-    'info.subTableName': function(val) {
-      this.setSubTableColumns(val);
     }
   },
+  watch: {
+    'info.subTableName': function (val) {
+      this.setSubTableColumns(val)
+    }
+  },
+  created() {},
   methods: {
     /** 转换菜单数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
-        delete node.children;
+        delete node.children
       }
       return {
-        id: node.menuId,
-        label: node.menuName,
+        id: node.id,
+        label: node.title,
         children: node.children
-      };
+      }
     },
     /** 选择子表名触发 */
     subSelectChange(value) {
-      this.info.subTableFkName = '';
+      this.info.subTableFkName = ''
     },
     /** 选择生成模板触发 */
     tplSelectChange(value) {
-      if(value !== 'sub') {
-        this.info.subTableName = '';
-        this.info.subTableFkName = '';
+      if (value !== 'sub') {
+        this.info.subTableName = ''
+        this.info.subTableFkName = ''
       }
     },
     /** 设置关联外键 */
     setSubTableColumns(value) {
-      for (var item in this.tables) {
-        const name = this.tables[item].tableName;
+      for (const item in this.tables) {
+        const name = this.tables[item].tableName
         if (value === name) {
-          this.subColumns = this.tables[item].columns;
-          break;
+          this.subColumns = this.tables[item].columns
+          break
         }
       }
     }
   }
-};
+}
 </script>
