@@ -7,7 +7,7 @@
         </el-tab-pane>
         <el-tab-pane label="字段信息" name="columnInfo">
           <el-table ref="dragTable" v-el-table-height-adaptive="{ bottomOffset: 120 }" height="300px" :data="columns" row-key="id" border>
-            <el-table-column label="序号" type="index" min-width="5%" class-name="allowDrag" />
+            <el-table-column label="序号" prop="id" min-width="5%" class-name="allowDrag" />
             <el-table-column label="字段列名" prop="columnName" min-width="10%" :show-overflow-tooltip="true" />
             <el-table-column label="字段描述" min-width="10%">
               <template slot-scope="scope">
@@ -98,6 +98,12 @@
                 </el-select>
               </template>
             </el-table-column>
+            <el-table-column label="排序" width="80" prop="sort" align="center" />
+            <el-table-column label="拖动排序" width="80" prop="id" align="center" class-name="allowDrag">
+              <template>
+                <i class="el-icon-rank f18 poi" />
+              </template>
+            </el-table-column>
           </el-table>
         </el-tab-pane>
         <el-tab-pane label="生成信息" name="genInfo">
@@ -168,6 +174,8 @@ export default {
   mounted() {
     const el = this.$refs.dragTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
     Sortable.create(el, {
+      ghostClass: 'sortable-ghost', // 拖拽样式
+      animation: 60, // 拖拽延时，效果更好看
       handle: '.allowDrag',
       onEnd: evt => {
         const targetRow = this.columns.splice(evt.oldIndex, 1)[0]
