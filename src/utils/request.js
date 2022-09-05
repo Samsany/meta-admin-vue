@@ -44,9 +44,14 @@ service.interceptors.response.use(
    * Determine the request status by custom code
    * Here is just an example
    * You can also judge the status by HTTP Status Code
-   */ response => {
+   */
+  response => {
     const { config, data: res } = response
-    // console.log('请求数据：', res)
+    // 二进制数据则直接返回
+    if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+      return response
+    }
+
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;

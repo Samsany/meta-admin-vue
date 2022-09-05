@@ -532,6 +532,7 @@ export async function blobValidate(data) {
   try {
     const text = await data.text()
     JSON.parse(text)
+    console.log(text)
     return false
   } catch (error) {
     return true

@@ -27,7 +27,7 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-        <el-button v-permission="['tool:gen:code']" type="primary" plain icon="el-icon-download" size="mini" @click="handleGenTable"
+        <el-button v-permission="['tool:gen:code']" type="primary" plain icon="el-icon-download" size="mini" @click="handleGenTableBatch"
           >生成
         </el-button>
       </el-col>
@@ -150,7 +150,7 @@ import 'codemirror/addon/hint/sql-hint'
 import 'codemirror/addon/display/fullscreen.js'
 import 'codemirror/addon/display/fullscreen.css'
 
-import { listGenTable, previewTable } from '@/api/tools/gen'
+import { genCode, listGenTable, previewTable } from '@/api/tools/gen'
 
 export default {
   name: 'CodeGen',
@@ -285,7 +285,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const tableIds = row.tableId || this.ids
+      const tableIds = row.id || this.ids
       this.$modal
         .confirm('是否确认删除表编号为"' + tableIds + '"的数据项？')
         .then(function () {
@@ -305,6 +305,7 @@ export default {
         this.preview.activeName = 'vm/java/domain.java.vm'
       })
     },
+    /** 设置代码高亮 */
     selectCmOptionsMode(val) {
       // 处理mode值，根据文件名后缀
       console.log(val)
@@ -331,10 +332,33 @@ export default {
         this.cmOptions.mode = 'text/x-java'
       }
     },
+    /** 设置预览代码 */
     setCodeMirrorValue(val) {
       this.code = this.preview.data[val]
     },
-    handleGenTable() {}
+    /** 生成代码操作 */
+    handleGenTable(row) {
+      const tableName = row.tableName
+      if (tableName === '') {
+        this.$modal.msgError('请选择要生成的数据')
+        return
+      }
+      if (row.genType === '1') {
+        genCode(row.id).then(res => {
+          this.$modal.msgSuccess('成功生成到自定义路径：' + row.genPath)
+        })
+      } else {
+        this.$download.get(`/meta-gen/tools/gen/download/${row.id}`)
+      }
+    },
+    /** 批量生成代码操作 */
+    handleGenTableBatch() {
+      if (this.ids.length === 0) {
+        this.$modal.msgWarning('请选择要生成的数据')
+        return
+      }
+      this.$download.post('/meta-gen/tools/gen/codeBatch', this.ids)
+    }
   }
 }
 </script>

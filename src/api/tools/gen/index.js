@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import { default as request } from '@/utils/request'
 
 // 查询生成数据库表列表
 export function listGenTable(params) {
@@ -21,7 +21,7 @@ export function listDbTable(params) {
 // 查询表详细信息
 export function getGenTable(tableId) {
   return request({
-    url: `/meta-gen/tools/gen/${tableId}`,
+    url: `/meta-gen/tools/gen/info/${tableId}`,
     method: 'get'
   })
 }
@@ -45,9 +45,35 @@ export function importTable(dsName, data) {
 }
 
 // 预览生成代码
-export function previewTable(id) {
+export function previewTable(tableId) {
   return request({
-    url: `/meta-gen/tools/gen/preview/${id}`,
+    url: `/meta-gen/tools/gen/preview/${tableId}`,
+    method: 'get'
+  })
+}
+
+// 生成代码
+export function genCode(tableId) {
+  return request({
+    url: `/meta-gen/tools/gen/code/${tableId}`,
+    method: 'get'
+  })
+}
+
+// 批量生成代码
+export function genCodeBatch(data) {
+  return request({
+    url: `/meta-gen/tools/gen/codeBatch`,
+    method: 'post',
+    responseType: 'blob',
+    data
+  })
+}
+
+// 同步数据库
+export function syncDb(tableId) {
+  return request({
+    url: `/meta-gen/tools/gen/syncDb/${tableId}`,
     method: 'get'
   })
 }

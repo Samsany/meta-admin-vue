@@ -12,6 +12,7 @@ import Cache from './Plugins/cache'
 import Modal from './Plugins/modal'
 import { getDictDataList } from '@/api/system/dict/data'
 import { addDateRange, handleTree, resetForm, selectDictLabel, selectDictLabels } from '@/utils'
+import download from '@/components/Plugins/download'
 
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
@@ -25,8 +26,8 @@ Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectDictLabels = selectDictLabels
-// Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
+Vue.prototype.$download = download
 // 页签操作
 Vue.prototype.$tab = Tab
 // 缓存对象
