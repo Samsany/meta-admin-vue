@@ -2,10 +2,39 @@
   <div class="app-container">
     <el-card>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="基本信息" name="basic">
-          <basic-info-form ref="basicInfo" :info="info" />
-        </el-tab-pane>
-        <el-tab-pane label="字段信息" name="columnInfo">
+        <!--    基本信息      -->
+        <el-tab-pane label="基本信息" name="columnInfo">
+          <el-form ref="basicInfoForm" :model="info" :rules="rules" label-width="100px">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="表名称" prop="tableName">
+                  <el-input v-model="info.tableName" placeholder="请输入仓库名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="表描述" prop="tableComment">
+                  <el-input v-model="info.tableComment" placeholder="请输入" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="实体类名称" prop="className">
+                  <el-input v-model="info.className" placeholder="请输入" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="作者" prop="functionAuthor">
+                  <el-input v-model="info.functionAuthor" placeholder="请输入" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="备注" prop="remark">
+                  <el-input v-model="info.remark" type="textarea" :rows="2"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </el-form>
+
+          <!--    字段表格      -->
           <el-table ref="dragTable" v-el-table-height-adaptive="{ bottomOffset: 120 }" height="300px" :data="columns" row-key="id" border>
             <el-table-column label="序号" prop="id" min-width="5%" class-name="allowDrag" />
             <el-table-column label="字段列名" prop="columnName" min-width="10%" :show-overflow-tooltip="true" />
@@ -106,6 +135,8 @@
             </el-table-column>
           </el-table>
         </el-tab-pane>
+
+        <!--    生成信息    -->
         <el-tab-pane label="生成信息" name="genInfo">
           <gen-info-form ref="genInfo" :info="info" :tables="tables" :menus="menus" />
         </el-tab-pane>
@@ -124,14 +155,12 @@
 import { getGenTable, updateGenTable } from '@/api/tools/gen'
 import { optionSelect as getDictOptionSelect } from '@/api/system/dict/type'
 import { treeMenuList } from '@/api/system/menu'
-import basicInfoForm from './basicInfoForm'
 import genInfoForm from './genInfoForm'
 import Sortable from 'sortablejs'
 
 export default {
   name: 'GenEdit',
   components: {
-    basicInfoForm,
     genInfoForm
   },
   data() {
@@ -147,7 +176,13 @@ export default {
       // 菜单信息
       menus: [],
       // 表详细信息
-      info: {}
+      info: {},
+      rules: {
+        tableName: [{ required: true, message: '请输入表名称', trigger: 'blur' }],
+        tableComment: [{ required: true, message: '请输入表描述', trigger: 'blur' }],
+        className: [{ required: true, message: '请输入实体类名称', trigger: 'blur' }],
+        functionAuthor: [{ required: true, message: '请输入作者', trigger: 'blur' }]
+      }
     }
   },
   watch: {},
@@ -189,13 +224,13 @@ export default {
   methods: {
     /** 提交按钮 */
     submitForm() {
-      const basicForm = this.$refs.basicInfo.$refs.basicInfoForm
+      const basicForm = this.$refs.basicInfoForm
       const genForm = this.$refs.genInfo.$refs.genInfoForm
       Promise.all([basicForm, genForm].map(this.getFormPromise)).then(res => {
         const validateResult = res.every(item => !!item)
         if (validateResult) {
           const genTable = Object.assign({}, basicForm.model, genForm.model)
-          console.log(this.columns)
+          // console.log(this.columns)
           genTable.columns = this.columns
           const params = {
             treeCode: genTable.treeCode,

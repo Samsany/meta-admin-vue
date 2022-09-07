@@ -165,7 +165,7 @@
                 菜单状态
               </span>
               <el-radio-group v-model="form.status">
-                <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="Number(dict.value)">
+                <el-radio v-for="dict in dict.type.sys_normal_disable" :key="dict.value" :label="parseInt(dict.value)">
                   {{ dict.label }}
                 </el-radio>
               </el-radio-group>
@@ -180,7 +180,7 @@
                 显示状态
               </span>
               <el-radio-group v-model="form.hidden">
-                <el-radio v-for="dict in dict.type.sys_show_hide" :key="dict.value" :label="Number(dict.value)">
+                <el-radio v-for="dict in dict.type.sys_show_hide" :key="dict.value" :label="parseInt(dict.value)">
                   {{ dict.label }}
                 </el-radio>
               </el-radio-group>
@@ -308,8 +308,8 @@ export default {
     /** 查询菜单列表 */
     getList() {
       this.loading = true
-      treeMenuList(this.queryParams).then(response => {
-        this.menuList = response.data
+      treeMenuList(this.queryParams).then(res => {
+        this.menuList = res.data
         this.loading = false
       })
     },

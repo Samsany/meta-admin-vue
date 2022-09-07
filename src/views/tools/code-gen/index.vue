@@ -285,7 +285,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const tableIds = row.id || this.ids
+      const tableIds = row.id ? [row.id] : this.ids
       this.$modal
         .confirm('是否确认删除表编号为"' + tableIds + '"的数据项？')
         .then(function () {
